@@ -1,8 +1,8 @@
 import express from 'express'
+import cors from 'cors'
 import fetch from 'node-fetch'
 import cheerio from 'cheerio'
 import dotenv from 'dotenv'
-import cors from 'cors'
 
 dotenv.config()
 
@@ -11,6 +11,11 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+
+app.get('/', (req, res) => {
+    res.status(200).send("it's working")
+})
 
 async function fetchHtml(url) {
     try {
@@ -30,9 +35,7 @@ function extractYouTubeMetadata(html) {
 
     return { title, description, thumbnail }
 }
-app.get('/', async(req, res) => {
-    console.log('server is running')
-})
+
 app.post('/scrape-metadata', async (req, res) => {
     try {
         const { url } = req.body
@@ -50,5 +53,5 @@ app.post('/scrape-metadata', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`)
+    console.log(`server is listening on PORT: ${PORT}`)
 })
