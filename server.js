@@ -2,6 +2,7 @@ import express from 'express'
 import fetch from 'node-fetch'
 import cheerio from 'cheerio'
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 dotenv.config()
 
@@ -9,6 +10,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 app.use(express.json())
+app.use(cors())
 
 async function fetchHtml(url) {
     try {
@@ -28,7 +30,9 @@ function extractYouTubeMetadata(html) {
 
     return { title, description, thumbnail }
 }
-
+app.get('/', async(req, res) => {
+    console.log('server is running')
+})
 app.post('/scrape-metadata', async (req, res) => {
     try {
         const { url } = req.body
